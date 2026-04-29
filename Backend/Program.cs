@@ -49,10 +49,9 @@ builder.Services.AddCors(options =>
             origins.Add(frontendUrl);
         }
         
-        policy.WithOrigins(origins.ToArray())
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
+              .AllowAnyHeader();
     });
 });
 
