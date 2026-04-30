@@ -18,7 +18,7 @@ RUN dotnet publish "OptionsTracker.csproj" -c Release -o /app/publish /p:UseAppH
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
+
 ENV ASPNETCORE_HTTP_PORTS=80
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "OptionsTracker.dll"]
