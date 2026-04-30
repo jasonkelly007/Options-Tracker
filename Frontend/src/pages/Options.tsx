@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { optionsApi } from '../api/client';
 import type { OptionsPosition } from '../types';
-import { formatCurrency } from '../utils/formatters';
 import PositionCard from '../components/PositionCard';
 
 export default function Options() {

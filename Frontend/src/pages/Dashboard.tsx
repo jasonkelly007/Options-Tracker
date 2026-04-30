@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { optionsApi } from '../api/client';
 import type { DashboardSummary } from '../types';
-import { formatCurrency, formatPercent } from '../utils/formatters';
+import { formatCurrency } from '../utils/formatters';
 import PositionCard from '../components/PositionCard';
 
 export default function Dashboard() {
