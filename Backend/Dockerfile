@@ -19,6 +19,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 EXPOSE 80
 
-ENV ASPNETCORE_HTTP_PORTS=80
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "OptionsTracker.dll"]
