@@ -1,6 +1,6 @@
-# Options Tracker
+# Options Tracker (Neodius Edition)
 
-A full-stack web application for tracking stock positions, covered calls, cash-secured puts, and option rolling strategies.
+A professional full-stack web application for tracking stock positions, covered calls, cash-secured puts, and option rolling strategies. Modified by **Neodius** to support cloud deployment and PostgreSQL.
 
 ## Features
 
@@ -16,7 +16,7 @@ A full-stack web application for tracking stock positions, covered calls, cash-s
 ### Backend
 - ASP.NET Core 8 Web API
 - Entity Framework Core
-- SQL Server
+- **PostgreSQL** (Production) / SQL Server (Local)
 - CsvHelper for CSV parsing
 
 ### Frontend
@@ -55,6 +55,29 @@ docker-compose up
 ```
 
 That's it! Docker will handle the database, backend, and frontend automatically.
+
+## 🚀 Cloud Deployment (Railway)
+
+This version is pre-configured for one-click deployment on **Railway** using PostgreSQL.
+
+### 1. Database Setup
+1. Create a **PostgreSQL** service in your Railway project.
+2. The backend will automatically detect and connect to the database using the internal connection string.
+
+### 2. Environment Variables
+
+#### Backend Service:
+- `FRONTEND_URL`: `https://your-frontend-domain.up.railway.app`
+- `PORT`: `80` (Standard)
+
+#### Frontend Service:
+- `VITE_API_URL`: `https://your-backend-domain.up.railway.app/api` (Ensure `/api` is at the end!)
+
+### 3. Critical Fixes Included
+- **Postgres DateTime Fix**: Pre-configured with legacy timestamp behavior to prevent Npgsql save errors.
+- **Dynamic Port Binding**: Automatically binds to Railway's assigned port to prevent 502 Bad Gateway errors.
+- **CORS Preflight Fix**: Optimized for reverse proxies to ensure secure cross-origin communication.
+
 
 ### Manual Setup
 
