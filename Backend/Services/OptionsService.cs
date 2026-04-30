@@ -11,6 +11,7 @@ namespace OptionsTracker.Services
         Task<OptionsPositionDto?> GetOptionsPositionByIdAsync(int id);
         Task<OptionsPositionDto> CreateCoveredCallAsync(CreateCoveredCallDto dto);
         Task<OptionsPositionDto> CreateCashSecuredPutAsync(CreateCashSecuredPutDto dto);
+        Task<OptionsPositionDto> CreateOptionAsync(CreateOptionDto dto);
         Task<RollHistoryDto> RollOptionAsync(RollOptionDto dto);
         Task<List<RollHistoryDto>> GetRollHistoryAsync(int? optionsPositionId = null);
         Task<bool> CloseOptionsPositionAsync(int id, decimal closingPrice);
@@ -113,6 +114,36 @@ namespace OptionsTracker.Services
             await _context.SaveChangesAsync();
 
             return MapToDto(csp);
+        }
+        
+        public async Task<OptionsPositionDto> CreateOptionAsync(CreateOptionDto dto)
+        {
+            if (!Enum.TryParse<OptionType>(dto.OptionType, true, out var optionType))
+                throw new ArgumentException($"Invalid option type: {dto.OptionType}");
+                
+            if (!Enum.TryParse<OptionStrategy>(dto.Strategy, true, out var strategy))
+                throw new ArgumentException($"Invalid strategy: {dto.Strategy}");
+
+            var option = new OptionsPosition
+            {
+                UnderlyingSymbol = dto.UnderlyingSymbol,
+                OptionType = optionType,
+                Strategy = strategy,
+                StrikePrice = dto.StrikePrice,
+                ExpirationDate = dto.ExpirationDate,
+                Contracts = dto.Contracts,
+                PremiumPerContract = dto.PremiumPerContract,
+                CurrentPrice = dto.PremiumPerContract,
+                OpenDate = DateTime.UtcNow,
+                Status = PositionStatus.Open,
+                Account = dto.Account,
+                Notes = dto.Notes ?? string.Empty
+            };
+
+            _context.OptionsPositions.Add(option);
+            await _context.SaveChangesAsync();
+
+            return MapToDto(option);
         }
 
         public async Task<RollHistoryDto> RollOptionAsync(RollOptionDto dto)
@@ -262,6 +293,8 @@ namespace OptionsTracker.Services
 
             var activeCoveredCalls = options.Count(o => o.Strategy == OptionStrategy.CoveredCall);
             var activeCashSecuredPuts = options.Count(o => o.Strategy == OptionStrategy.CashSecuredPut);
+            var activeLongCalls = options.Count(o => o.Strategy == OptionStrategy.Long && o.OptionType == OptionType.Call);
+            var activeLongPuts = options.Count(o => o.Strategy == OptionStrategy.Long && o.OptionType == OptionType.Put);
 
             var topPositions = positions
                 .OrderByDescending(p => p.MarketValue)
@@ -294,6 +327,8 @@ namespace OptionsTracker.Services
                 TotalPremiumCollected = totalPremiumCollected,
                 ActiveCoveredCalls = activeCoveredCalls,
                 ActiveCashSecuredPuts = activeCashSecuredPuts,
+                ActiveLongCalls = activeLongCalls,
+                ActiveLongPuts = activeLongPuts,
                 PositionsCount = positions.Count,
                 TopPositions = topPositions,
                 ExpiringOptions = expiringOptions

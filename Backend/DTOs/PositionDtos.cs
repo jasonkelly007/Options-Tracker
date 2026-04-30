@@ -66,6 +66,19 @@ namespace OptionsTracker.DTOs
         public string? Notes { get; set; }
     }
 
+    public class CreateOptionDto
+    {
+        public string UnderlyingSymbol { get; set; } = string.Empty;
+        public string OptionType { get; set; } = string.Empty; // "Call" or "Put"
+        public string Strategy { get; set; } = string.Empty;   // "Long" or "Short"
+        public decimal StrikePrice { get; set; }
+        public DateTime ExpirationDate { get; set; }
+        public int Contracts { get; set; }
+        public decimal PremiumPerContract { get; set; }
+        public string Account { get; set; } = string.Empty;
+        public string? Notes { get; set; }
+    }
+
     public class RollOptionDto
     {
         public int OptionsPositionId { get; set; }
@@ -119,6 +132,8 @@ namespace OptionsTracker.DTOs
         public decimal TotalPremiumCollected { get; set; }
         public int ActiveCoveredCalls { get; set; }
         public int ActiveCashSecuredPuts { get; set; }
+        public int ActiveLongCalls { get; set; }
+        public int ActiveLongPuts { get; set; }
         public int PositionsCount { get; set; }
         public List<PositionDto> TopPositions { get; set; } = new();
         public List<OptionsPositionDto> ExpiringOptions { get; set; } = new();
