@@ -1,6 +1,6 @@
-# Options Tracker (Neodius Edition)
+# Options Tracker
 
-A professional full-stack web application for tracking stock positions, covered calls, cash-secured puts, and option rolling strategies. Modified by **Neodius** to support cloud deployment and PostgreSQL.
+A professional full-stack web application for tracking stock positions, covered calls, cash-secured puts, and option rolling strategies. Features added by **Neodius** to support cloud deployment and PostgreSQL.
 
 ## Features
 

@@ -42,11 +42,20 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-                "https://options-tracker-production.up.railway.app",
-                "http://localhost:3000", 
-                "http://localhost:5173"
-              )
+        var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
+        var origins = new List<string> { "http://localhost:3000", "http://localhost:5173" };
+        
+        if (!string.IsNullOrEmpty(frontendUrl))
+        {
+            // Support comma-separated URLs and handle trailing slashes
+            var urls = frontendUrl.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var url in urls)
+            {
+                origins.Add(url.Trim().TrimEnd('/'));
+            }
+        }
+        
+        policy.WithOrigins(origins.ToArray())
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
