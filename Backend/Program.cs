@@ -63,17 +63,26 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline
+
+// CORS must be first — before any middleware that could short-circuit the request
+app.UseCors("AllowFrontend");
+
+app.UseHttpsRedirection();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-
-
-app.UseCors("AllowFrontend");
-
 app.UseAuthorization();
+
+// Explicitly handle OPTIONS preflight requests so CORS headers are always returned
+app.MapMethods("{**path}", new[] { "OPTIONS" }, (HttpContext ctx) =>
+{
+    ctx.Response.StatusCode = StatusCodes.Status204NoContent;
+    return Task.CompletedTask;
+}).RequireCors("AllowFrontend");
 
 app.MapControllers();
 
